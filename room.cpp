@@ -82,13 +82,9 @@ void room::Play(Player *player, Image &screen){
    
     auto tiles_idx = GetTiles(player);
     for (auto i: tiles_idx) {
-        //std::cout<<i<<std::endl;
-           // std::cout<<"pidor1"<<std::endl;
         auto cur_name = room_[i]->get_name();
-           // std::cout<<"pidor2"<<std::endl;  
         if (cur_name == "wall") {
             player->Collision();
-
         } else if (cur_name == "door") {
             /* code */
         } else if (cur_name == "quit") {

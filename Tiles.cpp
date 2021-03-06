@@ -21,10 +21,10 @@ Tile::Tile(const std::string &name, const Image &src, int x_s, int y_s): _image(
 }
 
 void Tile::DrawTile(Image &screen, int i, int j) {
-    i *= 16 - 1;
-    j *= 16 - 1;
+    i *= 16;
+    j *= 16;
     _coords.first = i;
-    _coords.first = j;
+    _coords.second = j;
     for (int x = 0; x < 16; ++x)
         for (int y = 0; y < 16; ++y)
             screen.PutPixel(j + x, i + y, this->get_pixel(x, y));
