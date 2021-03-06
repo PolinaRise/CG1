@@ -1,5 +1,3 @@
-........
-.ABDBAC.
-..CAADB.
-.BD.BAC.
-........
+ABAA
+AAAA
+AAAA

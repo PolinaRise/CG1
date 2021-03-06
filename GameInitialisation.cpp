@@ -65,14 +65,14 @@ int main(int argc, char** argv)
 		gl_error = glGetError();
 
 	//Point starting_pos{.x = WINDOW_WIDTH / 2, .y = WINDOW_HEIGHT / 2};
-	Point starting_pos{.x = 30,.y = 30};
+	Point starting_pos{.x = 32,.y = 32};
 	Player player{starting_pos};
 
 	Image img("../resources/tex.png");
 	Image screenBuffer(WINDOW_WIDTH, WINDOW_HEIGHT, 4);
-		
- 		room rm('A');
-		rm.DrawRoom(screenBuffer);
+	
+	
+ 		Map map(&player, "resources/maps/labirinth.txt");
 
   glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);  GL_CHECK_ERRORS;
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f); GL_CHECK_ERRORS;
@@ -87,11 +87,8 @@ int main(int argc, char** argv)
     	glfwPollEvents();
 
 		
-		
-
 		processPlayerMovement(player);
-		rm.DrawRoom(screenBuffer);
-		rm.Play(&player,screenBuffer);
+		map.Play(&player,screenBuffer);
 		player.Draw(screenBuffer);
 		
 

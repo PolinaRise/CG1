@@ -6,8 +6,9 @@
 #include <set>
 #include <iostream>
 #include "Image.h"
+
 room::room (char cur) {
-    if (cur != 'E'){
+    if (cur != '.'){
         std::string path = "resources/maps/";
         path += cur; 
         path += ".txt";
@@ -21,16 +22,24 @@ room::room (char cur) {
             size_.second++;
             if (size_.first == 0) {
                 size_.first = str.length();
+
+            }
+
+            bool is_first;
+            if (size_.second == 1) {
+                is_first = 1;
+            } else {
+                is_first = 0;
             }
 
             room_.reserve(room_.size() + str.length());
 
-            for (auto c: str) {
+            for (int i = 0; i < str.length(); i++) {
                 
-                switch (c)
+                switch (str[i])
                 {
                 case '@': //player
-                    
+                    //???/
                     break;
                 case '#': //wall 
                     room_.push_back(new WallTile());
@@ -38,11 +47,26 @@ room::room (char cur) {
                 case '.': //floor
                     room_.push_back(new FloorTile());
                 break;
-                case 'x'://exit 
-                    room_.push_back(new DoorTile());
+                case 'x'://exit could be only on walls 
+                    exit_type x;
+                    
+                    if (i == 0) {
+                        x = LEFT;
+                    }
+                        else if (i != 0) {
+                        x = RIGHT;
+                        } else if (is_first) {
+                            x = UP;
+                        } else {
+                            x = DOWN;
+                        }
+                        
+                    
+                    room_.push_back(new DoorTile(x));
                     break;
                 case 'Q'://quit
-                    room_.push_back(new DoorTile());
+                    room_.push_back(new DoorTile(QUIT));
+                    
                     break;
                 case 'G'://gold
                     room_.push_back(new GoldTile());
@@ -55,13 +79,14 @@ room::room (char cur) {
         }
 
        
+    } else if (cur != '.') {
+        //you wiin tile 
+    } else {
+        //you dead tile 
     }
 }
 
-
-
 #define matind(s, i, j) i * s + j
-
 
 std::set<int> room::GetTiles(Player *player){
     std::set<int> tiles_idx;
@@ -78,7 +103,8 @@ std::set<int> room::GetTiles(Player *player){
       }
     return tiles_idx;
 }
-void room::Play(Player *player, Image &screen){
+
+exit_type room::Play(Player *player, Image &screen){
    
     auto tiles_idx = GetTiles(player);
     for (auto i: tiles_idx) {
@@ -86,20 +112,26 @@ void room::Play(Player *player, Image &screen){
         if (cur_name == "wall") {
             player->Collision();
         } else if (cur_name == "door") {
-            /* code */
-        } else if (cur_name == "quit") {
-            /* code */
+            return room_[i]->get_state();
+
         } else if (cur_name == "gold") {
-            /* code */
+            k_gold++;
+            int x_s = room_[i]->_coords.first;
+            int y_s = room_[i]->_coords.second;
+            room_[i] = new FloorTile();
+            room_[i]->DrawTile(screen, x_s, y_s);
+            //Картинка о том, что буфер увеличился
+            
         } else {
 
         }
     }
+    return STAY;
 }
 
 
 void room::DrawRoom (Image &screen) {
-    
+    std::cout<<"DRAW"<<std::endl;
     for (int i = 0 ; i < size_.second; ++i)
         for (int j = 0; j < size_.first; ++j) {
             int x = (room_.size() - size_.first) - i * size_.first + j;

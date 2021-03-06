@@ -30,8 +30,13 @@ void Tile::DrawTile(Image &screen, int i, int j) {
             screen.PutPixel(j + x, i + y, this->get_pixel(x, y));
 }
 
-  
 FloorTile::FloorTile(): Tile("floor", floorset, 16, 16) {};
+
 WallTile::WallTile(): Tile("wall", objset, 16, 16) {};
-DoorTile::DoorTile(): Tile("door", wallset, 64, 32) {};
+
+DoorTile::DoorTile(exit_type state): _state(state), Tile("door", wallset, 64, 32) {};
+ exit_type DoorTile::get_state() const {
+       return _state;
+   } 
+
 GoldTile::GoldTile(): Tile("gold", objset, 128, 96) {};
